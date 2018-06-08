@@ -3,6 +3,8 @@
 Fügt dynamisch neue SVG Rechtecke ins Feld.
 Sie können mit der Maus verschoben werden.
 
+Für Touch siehe: [link](https://github.com/sauternic/SVG-Graphik-Rechteck-Drag-PointerEvent)
+
 Läuft auf:
 - Firefox
 - Chrom
