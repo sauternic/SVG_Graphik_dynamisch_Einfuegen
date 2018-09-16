@@ -1,0 +1,102 @@
+<!doctype html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test2</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        svg {
+            border: 1px solid black;
+            background-color: aqua;
+        }
+
+        rect {
+            cursor: move;
+        }
+    </style>
+
+    <script>
+        'use strict';
+        window.onerror = function (e) { alert(e); };
+
+
+        function geladen() {
+            //Kann button1 direkt Ansprechen ohne document.getElementById()!
+            window.button1.addEventListener('click', button_click, false);
+
+
+            function button_click(params) {
+                //Rechteck Dynamisch Erzeugen
+                var svgNS = "http://www.w3.org/2000/svg";
+                var rect = document.createElementNS(svgNS, "rect");
+
+                rect.setAttribute('x', '500');
+                rect.setAttribute('y', '200');
+                rect.setAttribute('width', '500');
+                rect.setAttribute('height', '300');
+                rect.setAttribute('fill', 'red');
+                rect.setAttribute('stroke', '#000000');
+                rect.setAttribute('stroke-width', '4');
+                // Event Handler zuweisen.
+                rect.addEventListener('dragstart', function (e) { e.preventDefault() }, false)
+                rect.addEventListener('mousemove', mouseMove, false);
+                //Nur wegen IE arrX u. arrY löschen
+                rect.addEventListener('mouseup', function (e) { arrX = []; arrY = []; }, false);
+                rect.addEventListener('mousedown', auslesenMousePos, false);
+
+                window.svg1.appendChild(rect);
+
+            }
+
+            var arrX = [], arrY = [];
+            //IE
+            function auslesenMousePos(e) {
+                //Erster Array Eintrag
+                arrX.unshift(e.screenX);
+                arrY.unshift(e.screenY);
+            }
+
+            var AktuellX, AktuellY, movX, movY;
+            function mouseMove(e) {
+
+                //Auslesen der Ausgangsposition
+                AktuellX = parseInt(this.getAttribute('x'), 10);
+                AktuellY = parseInt(this.getAttribute('y'), 10);
+
+                //Nur wenn left Button gedrückt
+                if (e.buttons === 1) {
+                    //Setzen der neuen Position
+                    if (e.movementX != undefined) {
+                        this.setAttribute('x', AktuellX += e.movementX);
+                        this.setAttribute('y', AktuellY += e.movementY);
+                    }
+                    //IE Variante, movementX selber berechnen.
+                    else {
+                        //unshift fügt immer am Anfang ein.
+                        //Also zweiter Array Eintrag
+                        arrX.unshift(e.screenX);
+                        arrY.unshift(e.screenY);
+
+                        movX = arrX[0] - arrX[1];
+                        movY = arrY[0] - arrY[1];
+
+                        this.setAttribute('x', AktuellX += movX);
+                        this.setAttribute('y', AktuellY += movY);
+                    }
+
+                }
+
+            }
+        }
+    </script>
+</head>
+
+<body onload="geladen()">
+    <svg id="svg1" xmlns="http://www.w3.org/2000/svg" width="1500" height="800"></svg>
+    <input id="button1" type="button" value="Einfügen" />
+</body>
+
+</html>
